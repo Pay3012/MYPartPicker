@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PartController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -9,11 +10,9 @@ Route::get('/', function () {
 
 Route::get('/pcbuild', function () {
     return view('pcbuild');
-});
+})->name('pcbuild');
 
-Route::get('/parts', function () {
-    return view('parts');
-});
+Route::get('/parts', [PartController::class, 'index'])->name('parts');
 
 Route::get('/dashboard', function () {
     return view('dashboard');
