@@ -59,7 +59,7 @@
                     </div>
 
                     <!-- 📄 Pagination -->
-                    <div class="mt-6">
+                    <div>
                         {{ $parts->links() }}
                     </div>
 
