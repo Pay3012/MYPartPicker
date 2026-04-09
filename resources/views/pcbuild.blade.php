@@ -30,7 +30,21 @@
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="py-2 px-4">{{ $part->category }}</td>
                                         <td class="py-2 px-4">{{ $part->name }}</td>
-                                        <td class="py-2 px-4">{{ $part->amount }}</td>
+                                        <td class="py-2 px-4">
+                                            <div class="flex items-center gap-2">
+                                                <form action="{{ route('pcbuild.decrement') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="part_id" value="{{ $part->id }}">
+                                                    <button class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300 font-bold">−</button>
+                                                </form>
+                                                <span>{{ $part->amount }}</span>
+                                                <form action="{{ route('pcbuild.add') }}" method="POST">
+                                                    @csrf
+                                                    <input type="hidden" name="part_id" value="{{ $part->id }}">
+                                                    <button class="w-7 h-7 flex items-center justify-center bg-gray-200 rounded hover:bg-gray-300 font-bold">+</button>
+                                                </form>
+                                            </div>
+                                        </td>
                                         <td class="py-2 px-4">
                                             RM {{ number_format($part->price * $part->amount, 2) }}
                                         </td>
@@ -55,9 +69,34 @@
                         </table>
                     </div>
 
-                    <!-- 💰 Total -->
-                    <div class="mt-6 text-right font-semibold text-lg">
-                        Total: RM {{ number_format($totalPrice ?? 0, 2) }}
+                    <!-- 💰 Total + Save -->
+                    <div class="mt-6 flex items-center justify-between">
+                        <div>
+                            @if (session('success'))
+                                <p class="text-green-600 font-medium">{{ session('success') }}</p>
+                            @elseif (session('error'))
+                                <p class="text-red-600 font-medium">{{ session('error') }}</p>
+                            @elseif (!auth()->check() && count($buildParts) > 0)
+                                <p class="text-gray-600">
+                                    <a href="{{ route('login') }}" class="text-indigo-600 hover:underline font-medium">Log in</a>
+                                    or
+                                    <a href="{{ route('register') }}" class="text-indigo-600 hover:underline font-medium">Register</a>
+                                    to save your build.
+                                </p>
+                            @endif
+                        </div>
+
+                        <div class="flex items-center gap-4">
+                            <span class="font-semibold text-lg">Total: RM {{ number_format($totalPrice ?? 0, 2) }}</span>
+                            @auth
+                                <form action="{{ route('pcbuild.save') }}" method="POST">
+                                    @csrf
+                                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium">
+                                        Save Build
+                                    </button>
+                                </form>
+                            @endauth
+                        </div>
                     </div>
 
                     <!-- 🔍 Search Parts -->
