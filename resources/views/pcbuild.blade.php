@@ -89,12 +89,10 @@
                         <div class="flex items-center gap-4">
                             <span class="font-semibold text-lg">Total: RM {{ number_format($totalPrice ?? 0, 2) }}</span>
                             @auth
-                                <form action="{{ route('pcbuild.save') }}" method="POST">
-                                    @csrf
-                                    <button class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium">
-                                        Save Build
-                                    </button>
-                                </form>
+                                <button onclick="document.getElementById('save-build-modal').classList.remove('hidden')"
+                                    class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium">
+                                    Save Build
+                                </button>
                             @endauth
                         </div>
                     </div>
@@ -165,6 +163,35 @@
 
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Save Build Modal -->
+    <div id="save-build-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+            <h3 class="text-lg font-semibold mb-4">Name Your Build</h3>
+            <form action="{{ route('pcbuild.save') }}" method="POST">
+                @csrf
+                <input
+                    type="text"
+                    name="build_name"
+                    placeholder="e.g. Gaming Rig 2024"
+                    required
+                    maxlength="100"
+                    class="w-full border border-gray-300 rounded-lg px-4 py-2 mb-4 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                />
+                <div class="flex justify-end gap-3">
+                    <button type="button"
+                        onclick="document.getElementById('save-build-modal').classList.add('hidden')"
+                        class="px-4 py-2 rounded-lg border border-gray-300 hover:bg-gray-100">
+                        Cancel
+                    </button>
+                    <button type="submit"
+                        class="bg-indigo-600 text-white px-4 py-2 rounded-lg hover:bg-indigo-700 font-medium">
+                        Save
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 </x-app-layout>

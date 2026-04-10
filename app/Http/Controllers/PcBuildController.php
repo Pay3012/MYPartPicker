@@ -53,6 +53,10 @@ class PcBuildController extends Controller
 
     public function save(Request $request)
     {
+        $request->validate([
+            'build_name' => 'required|string|max:100',
+        ]);
+
         $sessionBuild = session('build', []);
 
         if (empty($sessionBuild)) {
@@ -63,7 +67,7 @@ class PcBuildController extends Controller
 
         $build = Pcbuild::create([
             'user_id' => auth()->id(),
-            'name'    => 'My Build',
+            'name'    => $request->input('build_name'),
         ]);
 
         $syncData = [];
