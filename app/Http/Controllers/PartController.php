@@ -16,12 +16,15 @@ class PartController extends Controller
         $query = Part::query();
 
         if ($search) {
-            $query->where('name', 'like', "%{$search}%")
-                  ->orWhere('category', 'like', "%{$search}%");
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('specs->chipset', 'like', "%{$search}%");
+            });
         }
 
         // Get all results (paginate for large lists)
-        $parts = $query->orderBy('id', 'asc')->paginate(10);
+        $parts = $query->orderBy('id', 'asc')->paginate(10)->withQueryString();
 
         // Return the Blade view
         return view('parts', compact('parts', 'search'));

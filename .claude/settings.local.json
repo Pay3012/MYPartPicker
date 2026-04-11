@@ -1,7 +1,8 @@
 {
   "permissions": {
     "allow": [
-      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Laravel:', d.get\\('require',{}\\).get\\('laravel/framework','?'\\)\\)\")"
+      "Bash(python -c \"import sys,json; d=json.load\\(sys.stdin\\); print\\('Laravel:', d.get\\('require',{}\\).get\\('laravel/framework','?'\\)\\)\")",
+      "Bash(php artisan:*)"
     ]
   }
 }

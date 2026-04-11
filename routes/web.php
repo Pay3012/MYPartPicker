@@ -19,6 +19,8 @@ Route::post('/pcbuild/add', [PcBuildController::class, 'add'])->name('pcbuild.ad
 Route::post('/pcbuild/save', [PcBuildController::class, 'save'])->name('pcbuild.save')->middleware('auth');
 Route::post('/pcbuild/decrement', [PcBuildController::class, 'decrement'])->name('pcbuild.decrement');
 Route::post('/pcbuild/remove', [PcBuildController::class, 'remove'])->name('pcbuild.remove');
+Route::delete('/pcbuild/{build}', [PcBuildController::class, 'destroy'])->name('pcbuild.destroy')->middleware('auth');
+Route::patch('/pcbuild/{build}', [PcBuildController::class, 'rename'])->name('pcbuild.rename')->middleware('auth');
 
 Route::get('/dashboard', function () {
     $builds = \App\Models\Pcbuild::where('user_id', auth()->id())

@@ -132,7 +132,12 @@
                                 @forelse ($parts as $part)
                                     <tr class="border-b hover:bg-gray-50">
                                         <td class="py-2 px-4">{{ $part->category }}</td>
-                                        <td class="py-2 px-4">{{ $part->name }}</td>
+                                        <td class="py-2 px-4">
+                                            {{ $part->name }}
+                                            @if($part->category === 'GPU' && !empty($part->specs['chipset']))
+                                                <span class="text-gray-500 text-sm">({{ $part->specs['chipset'] }})</span>
+                                            @endif
+                                        </td>
                                         <td class="py-2 px-4">RM {{ number_format($part->price, 2) }}</td>
                                         <td class="py-2 px-4">
                                             <form action="{{ route('pcbuild.add') }}" method="POST">

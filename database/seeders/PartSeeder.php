@@ -2,92 +2,111 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 use App\Models\Part;
 
 class PartSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        Part::insert([
-            // NVIDIA RTX 50 & 40 series GPUs
-            ['name' => 'RTX 5090',        'category' => 'GPU'],
-            ['name' => 'RTX 5080',        'category' => 'GPU'],
-            ['name' => 'RTX 5070 Ti',     'category' => 'GPU'],
-            ['name' => 'RTX 5070',        'category' => 'GPU'],
-            ['name' => 'RTX 5060 Ti',     'category' => 'GPU'],
-            ['name' => 'RTX 5060',        'category' => 'GPU'],
-            ['name' => 'RTX 5050',        'category' => 'GPU'],
-            ['name' => 'RTX 4090',        'category' => 'GPU'],
-            ['name' => 'RTX 5070',        'category' => 'GPU'],
-            ['name' => 'RTX 5060 Ti',     'category' => 'GPU'],
-            ['name' => 'RTX 5060',        'category' => 'GPU'],
-            ['name' => 'RTX 5050',        'category' => 'GPU'],
-            ['name' => 'RTX 4090',        'category' => 'GPU'],
-            ['name' => 'RTX 4080 Super',        'category' => 'GPU'],
-            ['name' => 'RTX 4080',        'category' => 'GPU'],
-            ['name' => 'RTX 4070 Ti Super',     'category' => 'GPU'],
-            ['name' => 'RTX 4070 Ti',     'category' => 'GPU'],
-            ['name' => 'RTX 4070 Super',     'category' => 'GPU'],
-            ['name' => 'RTX 4070',     'category' => 'GPU'],
-            ['name' => 'RTX 4060 Ti',     'category' => 'GPU'],
-            ['name' => 'RTX 4060',     'category' => 'GPU'],
+        DB::statement('SET FOREIGN_KEY_CHECKS=0');
+        Part::truncate();
+        DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
-            // AMD  RX 9000 & RX 7000 series GPUs
-            ['name' => ' RX 9070 XT',       'category' => 'GPU'],
-            ['name' => ' RX 9070',          'category' => 'GPU'],
-            ['name' => ' RX 9060 XT 16GB',  'category' => 'GPU'],
-            ['name' => ' RX 9060 XT 8GB',   'category' => 'GPU'],
-            ['name' => ' RX 9060',          'category' => 'GPU'],  
-            ['name' => ' RX 7900 XTX',       'category' => 'GPU'],
-            ['name' => ' RX 7900 XT',          'category' => 'GPU'],
-            ['name' => ' RX 7900 GRE',  'category' => 'GPU'],
-            ['name' => ' RX 7800 XT',   'category' => 'GPU'],
-            ['name' => ' RX 7700 XT',          'category' => 'GPU'],  
-            ['name' => ' RX 7700',       'category' => 'GPU'],
-            ['name' => ' RX 7600 XT0',          'category' => 'GPU'],
-            ['name' => ' RX 7600',  'category' => 'GPU'],
-
-            // R9000 & Ryzen 7000 series CPUs
-            ['name' => 'R9 9950X3D',     'category' => 'CPU'],
-            ['name' => 'R9 9900X3D',     'category' => 'CPU'],
-            ['name' => 'R7 9800X3D',     'category' => 'CPU'],
-            ['name' => 'R7 9700X',       'category' => 'CPU'], 
-            ['name' => 'R7 9700F',       'category' => 'CPU'], 
-            ['name' => 'R5 9600X',       'category' => 'CPU'],
-            ['name' => 'R5 9600',       'category' => 'CPU'],
-            ['name' => 'R5 9500F',       'category' => 'CPU'],
-            ['name' => 'R9 7950X3D',     'category' => 'CPU'],
-            ['name' => 'R9 7950X',     'category' => 'CPU'],
-            ['name' => 'R9 7900X3D',     'category' => 'CPU'],
-            ['name' => 'R9 7900X',     'category' => 'CPU'],
-            ['name' => 'R9 7900',     'category' => 'CPU'],
-            ['name' => 'R7 7800X3D',     'category' => 'CPU'],
-            ['name' => 'R7 7700X',       'category' => 'CPU'], 
-            ['name' => 'R7 7700',       'category' => 'CPU'],
-            ['name' => 'R5 7600X',       'category' => 'CPU'], 
-            ['name' => 'R5 7600',       'category' => 'CPU'], 
-            ['name' => 'R5 7500F',       'category' => 'CPU'], 
-            ['name' => 'R5 7400F',       'category' => 'CPU'], 
-            ['name' => 'R5 7400',       'category' => 'CPU'], 
-
-            // Ultra CPUs
-            ['name' => 'Ultra 9 285K',  'category' => 'CPU'],
-            ['name' => 'Ultra 9 285',   'category' => 'CPU'],
-            ['name' => 'Ultra 7 265K',  'category' => 'CPU'],
-            ['name' => 'Ultra 7 265KF',  'category' => 'CPU'],
-            ['name' => 'Ultra 5 265',  'category' => 'CPU'], 
-            ['name' => 'Ultra 5 265F',  'category' => 'CPU'], 
-            ['name' => 'Ultra 5 245K',  'category' => 'CPU'], 
-            ['name' => 'Ultra 5 245KF',  'category' => 'CPU'], 
-            ['name' => 'Ultra 5 245',  'category' => 'CPU'],
-            ['name' => 'Ultra 5 235',  'category' => 'CPU'],
-            ['name' => 'Ultra 5 225',  'category' => 'CPU'],
-            ['name' => 'Ultra 5 225F',  'category' => 'CPU'],
+        $this->seedFromCsv('cpu', 'CPU', fn($r) => [
+            'core_count'        => $r['core_count']        ?: null,
+            'core_clock'        => $r['core_clock']        ?: null,
+            'boost_clock'       => $r['boost_clock']       ?: null,
+            'microarchitecture' => $r['microarchitecture'] ?: null,
+            'tdp'               => $r['tdp']               ?: null,
+            'graphics'          => $r['graphics']          ?: null,
         ]);
+
+        $this->seedFromCsv('gpu', 'GPU', fn($r) => [
+            'chipset'     => $r['chipset']     ?: null,
+            'memory'      => $r['memory']      ?: null,
+            'core_clock'  => $r['core_clock']  ?: null,
+            'boost_clock' => $r['boost_clock'] ?: null,
+            'color'       => $r['color']       ?: null,
+            'length'      => $r['length']      ?: null,
+        ]);
+
+        $this->seedFromCsv('motherboard', 'Motherboard', fn($r) => [
+            'socket'        => $r['socket']        ?: null,
+            'form_factor'   => $r['form_factor']   ?: null,
+            'max_memory'    => $r['max_memory']    ?: null,
+            'memory_slots'  => $r['memory_slots']  ?: null,
+            'color'         => $r['color']         ?: null,
+        ]);
+
+        $this->seedFromCsv('ram', 'RAM', fn($r) => [
+            'speed'              => $r['speed']              ?: null,
+            'modules'            => $r['modules']            ?: null,
+            'color'              => $r['color']              ?: null,
+            'first_word_latency' => $r['first_word_latency'] ?: null,
+            'cas_latency'        => $r['cas_latency']        ?: null,
+        ]);
+
+        $this->seedFromCsv('storage', 'Storage', fn($r) => [
+            'capacity'     => $r['capacity']     ?: null,
+            'type'         => $r['type']         ?: null,
+            'cache'        => $r['cache']        ?: null,
+            'form_factor'  => $r['form_factor']  ?: null,
+            'interface'    => $r['interface']    ?: null,
+        ]);
+
+        $this->seedFromCsv('psu', 'PSU', fn($r) => [
+            'type'       => $r['type']       ?: null,
+            'efficiency' => $r['efficiency'] ?: null,
+            'wattage'    => $r['wattage']    ?: null,
+            'modular'    => $r['modular']    ?: null,
+            'color'      => $r['color']      ?: null,
+        ]);
+
+        $this->seedFromCsv('cooler', 'Cooler', fn($r) => [
+            'rpm'         => $r['rpm']         ?: null,
+            'noise_level' => $r['noise_level'] ?: null,
+            'color'       => $r['color']       ?: null,
+            'size'        => $r['size']        ?: null,
+        ]);
+
+        $this->seedFromCsv('fan', 'Fan', fn($r) => [
+            'size'        => $r['size']        ?: null,
+            'color'       => $r['color']       ?: null,
+            'rpm'         => $r['rpm']         ?: null,
+            'airflow'     => $r['airflow']     ?: null,
+            'noise_level' => $r['noise_level'] ?: null,
+            'pwm'         => $r['pwm']         ?: null,
+        ]);
+
+        $this->seedFromCsv('case', 'Case', fn($r) => [
+            'type'               => $r['type']               ?: null,
+            'color'              => $r['color']              ?: null,
+            'psu'                => $r['psu']                ?: null,
+            'side_panel'         => $r['side_panel']         ?: null,
+            'external_volume'    => $r['external_volume']    ?: null,
+            'internal_35_bays'   => $r['internal_35_bays']   ?: null,
+        ]);
+    }
+
+    private function seedFromCsv(string $type, string $category, callable $specsMapper): void
+    {
+        $path = database_path("data/{$type}.csv");
+        $handle = fopen($path, 'r');
+        $headers = fgetcsv($handle);
+
+        while (($row = fgetcsv($handle)) !== false) {
+            $data = array_combine($headers, $row);
+            Part::create([
+                'type'     => $type,
+                'category' => $category,
+                'name'     => $data['name'],
+                'price'    => $data['price'] !== '' ? round($data['price'] * 4, 2) : null,
+                'specs'    => $specsMapper($data),
+            ]);
+        }
+
+        fclose($handle);
     }
 }

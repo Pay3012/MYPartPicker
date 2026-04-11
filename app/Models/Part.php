@@ -32,6 +32,7 @@ class Part extends Model
         'storage'     => Parts\Storage::class,
         'cooler'      => Parts\Cooler::class,
         'fan'         => Parts\Fan::class,
+        'case'        => Parts\PcCase::class,
     ];
 
     public function pcbuilds()

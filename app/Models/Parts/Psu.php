@@ -9,6 +9,6 @@ class Psu extends Part
 {
     use HasParent;
 
-    // wattage, efficiency_rating (e.g. 80+ Gold), modular (true/false)
-    const SPEC_FIELDS = ['wattage', 'efficiency_rating', 'modular'];
+    // wattage, efficiency_rating (e.g. 80+ Gold), modular (fully/semi/non), form_factor (e.g. ATX)
+    const SPEC_FIELDS = ['wattage', 'form_factor', 'efficiency_rating', 'modular'];
 }

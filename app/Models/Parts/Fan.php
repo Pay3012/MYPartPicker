@@ -10,5 +10,5 @@ class Fan extends Part
     use HasParent;
 
     // size_mm (e.g. 120/140), max_rpm, max_cfm, bearing_type (e.g. Fluid Dynamic)
-    const SPEC_FIELDS = ['size_mm', 'max_rpm', 'max_cfm', 'bearing_type'];
+    const SPEC_FIELDS = ['size_mm', 'rpm', 'cfm', 'noise_level', 'pwm'];
 }

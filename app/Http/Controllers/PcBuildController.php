@@ -5,9 +5,11 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Part;
 use App\Models\Pcbuild;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 
 class PcBuildController extends Controller
 {
+    use AuthorizesRequests;
     public function index(Request $request)
     {
         $search = $request->input('search');
@@ -15,11 +17,14 @@ class PcBuildController extends Controller
         $partsQuery = Part::query();
 
         if ($search) {
-            $partsQuery->where('name', 'like', "%{$search}%")
-                       ->orWhere('category', 'like', "%{$search}%");
+            $partsQuery->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('specs->chipset', 'like', "%{$search}%");
+            });
         }
 
-        $parts = $partsQuery->paginate(10);
+        $parts = $partsQuery->paginate(10)->withQueryString();
 
         $sessionBuild = session('build', []);
         $buildParts = [];
@@ -38,7 +43,7 @@ class PcBuildController extends Controller
             }
         }
 
-        return view('pcbuild', compact('parts', 'buildParts', 'totalPrice'));
+        return view('pcbuild', compact('parts', 'buildParts', 'totalPrice', 'search'));
     }
 
     public function add(Request $request)
@@ -112,5 +117,23 @@ class PcBuildController extends Controller
         session(['build' => $build]);
 
         return back();
+    }
+
+    public function destroy(Pcbuild $build)
+    {
+        abort_if($build->user_id !== auth()->id(), 403);
+        $build->parts()->detach();
+        $build->delete();
+
+        return redirect()->route('dashboard')->with('success', 'Build deleted.');
+    }
+
+    public function rename(Request $request, Pcbuild $build)
+    {
+        abort_if($build->user_id !== auth()->id(), 403);
+        $request->validate(['name' => 'required|string|max:100']);
+        $build->update(['name' => $request->input('name')]);
+
+        return redirect()->route('dashboard')->with('success', 'Build renamed.');
     }
 }
